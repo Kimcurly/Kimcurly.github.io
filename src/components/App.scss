@@ -67,13 +67,16 @@
         .col {
             @include common.size(13.5%, 93%);
             @include common.flex-row(flex-start, flex-start);
-            height: 10em;
             border: 0.4px solid transparentize(gray, 0.4);
             border-radius: 3px;
             font-size: 0.8em;
             span {
                 margin: 4px 0 0 4px;
             }
+        }
+        .col::before {
+            content: "";
+            padding-top: 100%;
         }
         .col.cell.disabled {
             color: theme.$gray-color;

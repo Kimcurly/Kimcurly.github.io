@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { addMonths, subMonths } from "date-fns";
+import dayjs from "dayjs";
 import RenderHeader from "./RenderHeader";
 import RenderDays from "./RenderDays";
 import RenderCells from "./RenderCells";
 
+const date = dayjs();
 const Calendar = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(date);
+  const [selectedDate, setSelectedDate] = useState(date);
 
   const prevMonth = () => {
-    setCurrentMonth(subMonths(currentMonth, 1));
+    setCurrentMonth(currentMonth.subtract(1, "month"));
   };
 
   const nextMonth = () => {
-    setCurrentMonth(addMonths(currentMonth, 1));
+    setCurrentMonth(currentMonth.add(1, "month"));
   };
 
   return (

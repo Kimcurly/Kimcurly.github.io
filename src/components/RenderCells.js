@@ -1,22 +1,13 @@
 import React from "react";
-import {
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  format,
-} from "date-fns";
-import { isSameMonth, isSameDay, addDays } from "date-fns";
 
 function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(monthStart);
-  const startDate = startOfWeek(monthStart);
-  const endDate = endOfWeek(monthEnd);
+  const monthStart = currentMonth.startOf("month");
+  const monthEnd = monthStart.endOf("month");
+  const startDate = monthStart.startOf("week");
+  const endDate = monthEnd.endOf("week");
 
   const onDateClick = (day) => {
     setSelectedDate(day);
-    console.log(day);
   };
 
   const rows = [];
@@ -26,16 +17,16 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
 
   while (day <= endDate) {
     for (let i = 0; i < 7; i++) {
-      formattedDate = format(day, "d");
+      formattedDate = day.format("DD");
       const cloneDay = day;
       days.push(
         <div
           className={`col cell ${
-            !isSameMonth(day, monthStart)
+            !day.isSame(monthStart, "month")
               ? "disabled"
-              : !isSameDay(day, selectedDate)
+              : !day.isSame(selectedDate, "day")
               ? "valid"
-              : format(currentMonth, "M") !== format(day, "M")
+              : currentMonth.format("MM") !== day.format("MM")
               ? "not valid"
               : "selected"
           }`}
@@ -44,7 +35,7 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
         >
           <span
             className={
-              format(currentMonth, "M") !== format(day, "M")
+              currentMonth.format("MM") !== day.format("MM")
                 ? "text not valid"
                 : ""
             }
@@ -53,7 +44,7 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
           </span>
         </div>
       );
-      day = addDays(day, 1);
+      day = day.add(1, "day");
     }
     rows.push(
       <div className="row" key={day}>

@@ -1,14 +1,13 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-import { format } from "date-fns";
 
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
   return (
     <div className="header row">
       <div className="col col-start">
         <span className="text">
-          <span className="text month">{format(currentMonth, "M")}월</span>
-          {format(currentMonth, "yyyy")}
+          <span className="text month">{currentMonth.format("MM")}월</span>
+          {currentMonth.format("YYYY")}
         </span>
       </div>
       <div className="col col-end">

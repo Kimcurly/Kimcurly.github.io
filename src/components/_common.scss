@@ -1,11 +1,6 @@
 // 통용되는 것들
 @use "./theme";
 
-@mixin colsize($width: 100px, $height: 100px) {
-    width: $width;
-    height: $height;
-}
-
 @mixin size($width: 14px, $height: 14px) {
     width: $width;
     height: $height;    
