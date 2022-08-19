@@ -29,7 +29,7 @@
             @include common.size(20%, 100%);
             @include common.flex-row(flex-end, baseline);
             svg {
-                @include common.size(11%, fit-content);
+                @include common.size(20%, fit-content);
                 margin-left: 5%;
                 color: transparentize(gray, 0.2);
                 &:hover {

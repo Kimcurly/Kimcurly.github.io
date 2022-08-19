@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# 일정확인용 캘린더(투두 리스트 기능)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
