@@ -1,0 +1,114 @@
+@use "./theme";
+@use "./common";
+
+.rootContainer {
+    @include common.flex-row(center, center);
+    margin-top: 30px;
+    .calendar {
+        @include common.size(30%, 50%);
+        position: relative;
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 0 5px 0 #D3D3D3;
+        padding: 15px;
+        .header {
+            @include common.size(100%, 7%);
+            @include common.flex-row(center, center);
+            margin-bottom: 20px;
+            position: relative;
+            .col.col-start {
+                @include common.size(100%, 100%);
+                @include common.flex-row(center, center);
+                text-align: center;
+                margin-left: 1%;
+                .text {
+                    font-size: 0.8em;
+                }
+                .text.month {
+                    font-size: 1.6em;
+                    font-weight: 400;
+                    margin-bottom: 5px;
+                }
+            }
+            .col.col-end {
+                @include common.size(40%, 100%);
+                @include common.flex-row(center, center);
+                position: absolute;
+                svg {
+                    @include common.size(20%, fit-content);
+                    margin-left: 5%;
+                    color: transparentize(gray, 0.2);
+                    &:hover {
+                        @include common.hover-event();
+                        transform: scale(1.15);
+                        color: theme.$dark-gray-color;
+                    }
+                }
+                .space {
+                    padding: 50px;
+                    padding-right: 60px;
+                }
+            }
+        }
+    }
+        .days {
+            @include common.size(100%, fit-content);
+            @include common.flex-row(space-between, center);
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.65em;
+            padding: 2px;
+            color: theme.$dark-gray-color;
+            .col {
+                @include common.size(12.9%, 100%);
+                @include common.flex-column(flex-end, flex-start);
+                padding-left: 1%;
+                background: transparentize(theme.$step-color, 0.6);
+                border-radius: 10px;
+            }
+        }
+    
+    .body {
+        @include common.size(100%, 89%);
+        @include common.flex-column();
+        .row {
+            @include common.size(100%, 100%);
+            @include common.flex-row(space-between, center);
+            margin-bottom: 9px;
+            .col {
+                @include common.size(13.5%, 93%);
+                @include common.flex-row(flex-start, flex-start);
+                border: 0.4px solid transparentize(gray, 0.4);
+                border-radius: 3px;
+                font-size: 0.8em;
+                span {
+                    margin: 4px 0 0 4px;
+                }
+            }
+            .col::before {
+                content: "";
+                padding-top: 100%;
+            }
+            .col.cell.disabled {
+                color: theme.$gray-color;
+            }
+            .col.cell.valid {
+                &:hover {
+                    @include common.hover-event();
+                    @include common.shadow(1.5px, theme.$dark-gray-color, 0.1);
+                    transform: scale(1.01);
+                    border: none;
+                    background: transparentize(theme.$gray-color, 0.5);
+                }
+            }
+            .col.cell.selected {
+                @include common.shadow(1.5px, theme.$main-color, 0.1);
+                transform: scale(1.02);
+                border: none;
+                background: theme.$sub-color;
+                color: theme.$main-color;
+                font-weight: 600;
+            }
+        }
+    }
+}
