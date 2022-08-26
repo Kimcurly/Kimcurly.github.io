@@ -6,12 +6,9 @@
     height: $height;    
 }
 
-
-
 @mixin shadow($size: 3px, $color: black, $amount: 0.5) {
     box-shadow: $size $size 0px 0px transparentize($color, $amount);
 }
-
 
 @mixin hover-event {
     cursor: pointer;

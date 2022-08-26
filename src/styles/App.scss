@@ -5,7 +5,7 @@
     @include common.flex-row(center, center);
     margin-top: 30px;
     .calendar {
-        @include common.size(30%, 50%);
+        @include common.size(50vw, 50%);
         position: relative;
         border-radius: 16px;
         background: white;
@@ -35,7 +35,7 @@
                 @include common.flex-row(center, center);
                 position: absolute;
                 svg {
-                    @include common.size(20%, fit-content);
+                    @include common.size(10%, fit-content);
                     margin-left: 5%;
                     color: transparentize(gray, 0.2);
                     &:hover {
@@ -54,18 +54,19 @@
         .days {
             @include common.size(100%, fit-content);
             @include common.flex-row(space-between, center);
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 0.65em;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 1em;
             padding: 2px;
             color: theme.$dark-gray-color;
             .col {
                 @include common.size(12.9%, 100%);
-                @include common.flex-column(flex-end, flex-start);
-                padding-left: 1%;
-                background: transparentize(theme.$step-color, 0.6);
-                border-radius: 10px;
+                @include common.flex-row(center, center);
             }
+        }
+        
+        hr {
+            margin: 0;
         }
     
     .body {
@@ -74,40 +75,48 @@
         .row {
             @include common.size(100%, 100%);
             @include common.flex-row(space-between, center);
-            margin-bottom: 9px;
-            .col {
+            margin: 0;
+            border-bottom: 1px solid #5E5E5E;
+            .col.cell{
                 @include common.size(13.5%, 93%);
-                @include common.flex-row(flex-start, flex-start);
-                border: 0.4px solid transparentize(gray, 0.4);
-                border-radius: 3px;
-                font-size: 0.8em;
-                span {
-                    margin: 4px 0 0 4px;
+                display: flex;
+                flex-direction: column-reverse;
+                justify-content: start;
+                align-items: center;
+                font-size: 1em;
+                overflow-y: auto;
+                div {
+                    margin: 0 0 0 4px;
+                    text-align: center;
+                }
+                .disabled {
+                    color: theme.$gray-color;
+                }
+                .valid {
+                    &:hover {
+                        @include common.hover-event();
+                        width: 25px;
+                        height: 25px;
+                        border: none;
+                        border-radius: 1rem;
+                        background: transparentize(theme.$gray-color, 0.5);
+                        
+                    }
+                }
+                .selected {
+                    width: 25px;
+                    height: 25px;
+                    transform: scale(1.02);
+                    border-radius: 1rem;
+                    border: none;
+                    background: #444;
+                    color: #fff;
+                    font-weight: 600;
                 }
             }
             .col::before {
                 content: "";
                 padding-top: 100%;
-            }
-            .col.cell.disabled {
-                color: theme.$gray-color;
-            }
-            .col.cell.valid {
-                &:hover {
-                    @include common.hover-event();
-                    @include common.shadow(1.5px, theme.$dark-gray-color, 0.1);
-                    transform: scale(1.01);
-                    border: none;
-                    background: transparentize(theme.$gray-color, 0.5);
-                }
-            }
-            .col.cell.selected {
-                @include common.shadow(1.5px, theme.$main-color, 0.1);
-                transform: scale(1.02);
-                border: none;
-                background: theme.$sub-color;
-                color: theme.$main-color;
-                font-weight: 600;
             }
         }
     }

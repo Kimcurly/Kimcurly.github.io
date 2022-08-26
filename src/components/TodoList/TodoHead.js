@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useTodoState } from '../../TodoContext';
-import dayjs from 'dayjs';
+import {
+  useHeadSelectedDay,
+  useSelectedDay,
+  useTodoState,
+} from '../../TodoContext';
 import 'dayjs/locale/ko';
 
 const TodoHeadBlock = styled.div`
@@ -29,11 +32,16 @@ const TodoHeadBlock = styled.div`
 `;
 
 const TodoHead = () => {
+  const headSelectedDay = useHeadSelectedDay();
+  const selectedDay = useSelectedDay();
   const todos = useTodoState();
-  const undoneTasks = todos.filter((todo) => !todo.done);
+  const undoneTasks = todos
+    .filter((todo) => todo.date.selectedDay === selectedDay.selectedDay)
+    .filter((todo) => !todo.done);
 
-  dayjs.locale('ko');
-  const date = dayjs();
+  // 불러온 useState selectedDay 는 selectedDay와 setSelectedDay 로 이루어진 객체이기때문에 .selectedDay로 한번 더 빼주어야 한다.
+
+  const date = headSelectedDay.headSelectedDay.locale('ko');
   const year = date.format('YYYY');
   const month = date.format('MM');
   const day = date.format('DD');

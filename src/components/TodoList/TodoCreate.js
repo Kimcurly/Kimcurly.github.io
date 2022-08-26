@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { MdAdd } from 'react-icons/md';
-import { useTodoDispatch, useTodoNextId } from '../../TodoContext';
+import {
+  addSchedule,
+  useSelectedDay,
+  useTodoDispatch,
+  useTodoNextId,
+} from '../../TodoContext';
 
 const CircleButton = styled.button`
   background: #38d9a9;
@@ -80,6 +85,7 @@ const TodoCreate = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
+  const selectedDay = useSelectedDay();
   const dispatch = useTodoDispatch();
   const nextId = useTodoNextId();
 
@@ -87,14 +93,7 @@ const TodoCreate = () => {
   const onChange = (e) => setValue(e.target.value);
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch({
-      type: 'CREATE',
-      todo: {
-        id: nextId.current,
-        text: value,
-        done: false,
-      },
-    });
+    dispatch(addSchedule(selectedDay, value, nextId.current));
     setValue('');
     nextId.current += 1;
   };

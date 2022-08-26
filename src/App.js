@@ -10,6 +10,7 @@ import { MdAdd } from 'react-icons/md';
 const GlobalStyle = createGlobalStyle`
 body {
   background: #e9ecef;
+  white-space: pre-line;
 }
 `;
 const CircleButton = styled.button`
@@ -30,8 +31,8 @@ const CircleButton = styled.button`
   justify-content: center;
   font-size: 60px;
   position: absolute;
-  left: 70%;
-  bottom: 35%;
+  left: 77%;
+  bottom: 10%;
   color: white;
   border-radius: 50%;
   border: none;
