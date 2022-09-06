@@ -1,119 +1,80 @@
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
-import { MdAdd } from 'react-icons/md';
+import styled from 'styled-components';
 import {
   addSchedule,
   useSelectedDay,
   useTodoDispatch,
   useTodoNextId,
 } from '../../TodoContext';
-
-const CircleButton = styled.button`
-  background: #38d9a9;
-  &:hover {
-    background: #63e6be;
-  }
-  &:active {
-    background: #20c997;
-  }
-
-  z-index: 5;
-  cursor: pointer;
-  width: 80px;
-  height: 80px;
-  display: block;
-  align-items: center;
-  justify-content: center;
-  font-size: 60px;
-  position: absolute;
-  left: 50%;
-  bottom: 0px;
-  transform: translate(-50%, 50%);
-  color: white;
-  border-radius: 50%;
-  border: none;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition: 0.125s all ease-in;
-  ${(props) =>
-    props.open &&
-    css`
-      background: #ff6b6b;
-      &:hover {
-        background: #ff8787;
-      }
-      &:active {
-        background: #fa5252;
-      }
-      transform: translate(-50%, 50%) rotate(45deg);
-    `}
-`;
+import { useNavigate } from 'react-router-dom';
+import { TextField } from '@mui/material';
+import { Button } from '@mui/material';
 
 const InsertFormPositioner = styled.div`
   width: 100%;
   bottom: 0;
   left: 0;
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10vh;
 `;
 
-const InsertForm = styled.form`
-  background: #f8f9fa;
-  padding-left: 32px;
-  padding-top: 32px;
-  padding-right: 32px;
-  padding-bottom: 72px;
-
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
-  border-top: 1px solid #e9ecef;
-`;
-
-const Input = styled.input`
-  padding: 12px;
-  border-radius: 4px;
-  border: 1px solid #dee2e6;
+const ButtonPositioner = styled.div`
   width: 100%;
-  outline: none;
-  font-size: 18px;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 15vh;
+`;
+
+const CenterButton = styled(Button)`
+  width: 9vw;
+
+  margin-right: 2vh;
+  margin-left: 2vh;
+`;
+
+const InputTextField = styled(TextField)`
+  width: 20vw;
+  margin-bottom: 15vh;
 `;
 
 const TodoCreate = () => {
-  const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
+
+  const navigate = useNavigate();
+  const onChange = (e) => setValue(e.target.value);
 
   const selectedDay = useSelectedDay();
   const dispatch = useTodoDispatch();
   const nextId = useTodoNextId();
 
-  const onToggle = () => setOpen(!open);
-  const onChange = (e) => setValue(e.target.value);
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onAddSchedules = () => {
     dispatch(addSchedule(selectedDay, value, nextId.current));
     setValue('');
     nextId.current += 1;
+
+    navigate('/');
   };
   return (
     <>
-      {open && (
-        <InsertFormPositioner>
-          <InsertForm onSubmit={onSubmit}>
-            <Input
-              autoFocus
-              placeholder="할 일을 입력 후, Enter키를 누르세요"
-              onChange={onChange}
-              value={value}
-            />
-          </InsertForm>
-        </InsertFormPositioner>
-      )}
-      <CircleButton onClick={onToggle} open={open}>
-        <MdAdd />
-      </CircleButton>
+      <InsertFormPositioner>
+        <InputTextField
+          id="standard-basic"
+          label="일정을 입력하세요"
+          variant="standard"
+          onChange={onChange}
+        />
+      </InsertFormPositioner>
+      <ButtonPositioner>
+        <CenterButton variant="outlined" onClick={() => navigate(-1)}>
+          취소
+        </CenterButton>
+        <CenterButton variant="contained" onClick={onAddSchedules}>
+          + 추가
+        </CenterButton>
+      </ButtonPositioner>
     </>
   );
 };

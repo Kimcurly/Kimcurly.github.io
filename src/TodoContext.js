@@ -10,22 +10,36 @@ import dayjs from 'dayjs';
 const CREATE = 'CREATE';
 const TOGGLE = 'TOGGLE';
 const REMOVE = 'REMOVE';
+const UPDATE = 'UPDATE';
 
-const initialTodos = [];
-
+const initialSchedules = [];
 function todoReducer(state, action) {
   switch (action.type) {
     case CREATE:
-      const newSchedules = [
-        { date: action.date, text: action.text, id: action.id, done: false },
-      ];
+      let newSchedules = {
+        date: action.date,
+        text: action.text,
+        id: action.id,
+        done: false,
+      };
+      localStorage.setItem(
+        'newSchedules',
+        JSON.stringify([...state, newSchedules]),
+      );
       return state.concat(newSchedules);
     case TOGGLE:
-      return state.map((todo) =>
-        todo.id === action.id ? { ...todo, done: !todo.done } : todo,
+      return state.map(
+        (todo) =>
+          todo.id === action.id ? { ...todo, done: !todo.done } : todo,
+        localStorage.setItem('newSchedules', JSON.stringify([...state])),
       );
     case REMOVE:
-      return state.filter((todo) => todo.id !== action.id);
+      return state.filter(
+        (todo) => todo.id !== action.id,
+        localStorage.setItem('newSchedules', JSON.stringify([...state])),
+      );
+    case UPDATE:
+      return (state = action.newScheduleData);
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -42,7 +56,7 @@ export const addSchedule = (date, text, id) => {
 };
 
 export function TodoProvider({ children }) {
-  const [state, dispatch] = useReducer(todoReducer, initialTodos);
+  const [state, dispatch] = useReducer(todoReducer, initialSchedules);
   const nextId = useRef(0);
   const [selectedDay, setSelectedDay] = useState(dayjs().format('YYYY-MM-DD'));
   const [headSelectedDay, setHeadSelectedDay] = useState(dayjs());

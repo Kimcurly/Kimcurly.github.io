@@ -1,5 +1,6 @@
 import React from 'react';
-import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
   return (
@@ -11,9 +12,9 @@ const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
         </span>
       </div>
       <div className="col col-end">
-        <MdArrowBackIos onClick={prevMonth} />
+        <NavigateBeforeIcon onClick={prevMonth} />
         <div className="space"></div>
-        <MdArrowForwardIos onClick={nextMonth} />
+        <NavigateNextIcon onClick={nextMonth} />
       </div>
     </div>
   );
