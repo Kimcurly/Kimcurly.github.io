@@ -13,6 +13,8 @@ const UpdateComple = styled.button`
   font-size: 25px;
   cursor: pointer;
   margin-left: 4%;
+  background-color: #fadefe;
+  border: none;
   &:hover {
     color: #38d9a9;
   }
