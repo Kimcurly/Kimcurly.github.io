@@ -11,6 +11,7 @@ const CREATE = 'CREATE';
 const TOGGLE = 'TOGGLE';
 const REMOVE = 'REMOVE';
 const UPDATE = 'UPDATE';
+const MOUNT = 'MOUNT';
 
 const initialSchedules = [];
 function todoReducer(state, action) {
@@ -40,6 +41,8 @@ function todoReducer(state, action) {
       );
     case UPDATE:
       return (state = action.newScheduleData);
+    case MOUNT:
+      return (state = action.mountSchedules);
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
