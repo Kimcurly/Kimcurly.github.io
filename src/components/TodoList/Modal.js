@@ -6,7 +6,7 @@ import 'dayjs/locale/ko';
 import TodoItem from './TodoItem';
 
 const ModalBg = styled.div`
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.02);
   position: fixed;
   top: 0;
   left: 0;
@@ -22,16 +22,16 @@ const ModalContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #fadefe;
-  border-radius: 30px;
+  background-color: #f9f9f9;
+  border-radius: 25px;
   box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.08);
 `;
 
 const ModalHead = styled.div`
   padding: 10px;
   display: flex;
+  justify-content: center;
   span {
-    margin-left: 5.6vw;
     font-size: 2rem;
   }
 `;
@@ -44,19 +44,21 @@ const ModalDateContainer = styled.div`
 `;
 
 const ModalListContainer = styled.div`
-  flex: 1;
-  padding-top: 5%;
+  margin-top: 5%;
   padding-left: 5%;
   padding-right: 5%;
+  height: 55vh;
+  overflow-y: auto;
 `;
 
 const ExitButton = styled(NavigateBeforeIcon)`
   color: gray;
   opacity: 80%;
+  margin: 1% 0 0 1%;
   cursor: pointer;
 `;
 
-const Modal = ({ setModalOpen }) => {
+const Modal = ({ setModalOpen, setSelectedDate, selectedDate }) => {
   const headSelectedDay = useHeadSelectedDay();
   const selectedDay = useSelectedDay();
   const schedule = localStorage.getItem('newSchedules')
@@ -64,7 +66,16 @@ const Modal = ({ setModalOpen }) => {
     : [];
 
   const closeModal = () => {
+    setSelectedDate(date);
+    localStorage.setItem('selectedDate', selectedDate);
     setModalOpen(false);
+  };
+
+  const closeModalBg = () => {
+    setModalOpen(false);
+    console.log(selectedDate);
+    localStorage.setItem('selectedDate', selectedDate);
+    console.log(localStorage.getItem('selectedDate'));
   };
 
   const date = headSelectedDay.headSelectedDay.locale('ko');
@@ -73,10 +84,10 @@ const Modal = ({ setModalOpen }) => {
   const day = date.format('DD');
   const week = date.format('dd');
   return (
-    <ModalBg onClick={closeModal}>
+    <ModalBg onClick={closeModalBg}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
+        <ExitButton onClick={closeModal} />
         <ModalHead>
-          <ExitButton onClick={closeModal} />
           <span>일정 보기</span>
         </ModalHead>
         <ModalDateContainer>
@@ -84,7 +95,7 @@ const Modal = ({ setModalOpen }) => {
             {year}. {month}. {day} {week}
           </h2>
         </ModalDateContainer>
-        <ModalListContainer onClick={(e) => e.stopPropagation()}>
+        <ModalListContainer>
           {schedule
             .filter((todo) => todo.date.selectedDay === selectedDay.selectedDay)
             .sort()

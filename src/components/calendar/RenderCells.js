@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHeadSelectedDay, useSelectedDay } from '../../TodoContext';
 import styled from 'styled-components';
 import Modal from '../TodoList/Modal';
+import dayjs from 'dayjs';
 
 const StyledSchedule = styled.div`
   width: 100%;
@@ -28,13 +29,29 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
   const schedule = localStorage.getItem('newSchedules')
     ? JSON.parse(localStorage.getItem('newSchedules'))
     : [];
+  const storageSelectedDate = localStorage.getItem('selectedDate')
+    ? localStorage.getItem('selectedDate')
+    : dayjs();
+
+  useEffect(() => {
+    mountedSelectedDate();
+  }, []);
 
   const openModal = () => {
     setModalOpen(true);
   };
 
-  const onDateClick = (day) => {
+  const mountedSelectedDate = () => {
+    setSelectedDate(storageSelectedDate);
+  };
+
+  const updateSelectedDate = (day) => {
     setSelectedDate(day);
+    localStorage.setItem('selectedDate', day);
+  };
+
+  const onDateClick = (day) => {
+    updateSelectedDate(day);
     setHeadSelectedDay(day);
     setSelectedDay(day.format('YYYY-MM-DD'));
   };
@@ -82,26 +99,26 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
               // eslint-disable-next-line no-loop-func
               .filter((todo) => todo.date.selectedDay === datekey)
               .sort()
-              .map((todo) => {
+              .map((todo, index) => {
                 return (
-                  <>
-                    <StyledSchedule
-                      key={todo.id}
-                      id={todo.id}
-                      onClick={openModal}
-                      done={todo.done}
-                    >
-                      {todo.text}
-                    </StyledSchedule>
-                    {modalopen && (
-                      <Modal
-                        modalopen={modalopen}
-                        setModalOpen={setModalOpen}
-                      />
-                    )}
-                  </>
+                  <StyledSchedule
+                    key={index}
+                    id={todo.id}
+                    onClick={openModal}
+                    done={todo.done}
+                  >
+                    {todo.text}
+                  </StyledSchedule>
                 );
               })}
+            {modalopen && (
+              <Modal
+                modalopen={modalopen}
+                setModalOpen={setModalOpen}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+              />
+            )}
           </div>
         </div>,
       );
