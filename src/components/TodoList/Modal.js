@@ -6,7 +6,7 @@ import 'dayjs/locale/ko';
 import TodoItem from './TodoItem';
 
 const ModalBg = styled.div`
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
   left: 0;

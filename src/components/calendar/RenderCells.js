@@ -32,13 +32,32 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
   const storageSelectedDate = localStorage.getItem('selectedDate')
     ? localStorage.getItem('selectedDate')
     : dayjs();
+  const renderSchedules = schedule.sort().map((todo, index) => {
+    const openModal = () => {
+      setModalOpen(true);
+    };
+    return (
+      <StyledSchedule
+        key={index}
+        id={todo.id}
+        date={todo.date.selectedDay}
+        onClick={openModal}
+        done={todo.done}
+      >
+        {todo.text}
+      </StyledSchedule>
+    );
+  });
+  let datekey = '';
 
   useEffect(() => {
     mountedSelectedDate();
   }, []);
 
-  const openModal = () => {
-    setModalOpen(true);
+  const filterSchedules = (renderSchedules) => {
+    if (renderSchedules.props.date === datekey) {
+      return true;
+    }
   };
 
   const mountedSelectedDate = () => {
@@ -60,10 +79,11 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
   let days = [];
   let day = startDate;
   let formattedDate = '';
-  let datekey = '';
 
-  while (day <= endDate) {
-    for (let i = 0; i < 7; i++) {
+  console.log(renderSchedules);
+
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
       formattedDate = day.format('D');
       datekey = day.format('YYYY-MM-DD');
       const cloneDay = day;
@@ -95,30 +115,7 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
             >
               {formattedDate}
             </div>
-            {schedule
-              // eslint-disable-next-line no-loop-func
-              .filter((todo) => todo.date.selectedDay === datekey)
-              .sort()
-              .map((todo, index) => {
-                return (
-                  <StyledSchedule
-                    key={index}
-                    id={todo.id}
-                    onClick={openModal}
-                    done={todo.done}
-                  >
-                    {todo.text}
-                  </StyledSchedule>
-                );
-              })}
-            {modalopen && (
-              <Modal
-                modalopen={modalopen}
-                setModalOpen={setModalOpen}
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-              />
-            )}
+            {renderSchedules.filter(filterSchedules)}
           </div>
         </div>,
       );
@@ -134,6 +131,14 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
   return (
     <>
       <div className="body">{rows}</div>
+      {modalopen && (
+        <Modal
+          modalopen={modalopen}
+          setModalOpen={setModalOpen}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
+      )}
     </>
   );
 }
