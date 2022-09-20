@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 
 const RenderDays = () => {
   const days = [];
@@ -6,7 +7,13 @@ const RenderDays = () => {
 
   for (let i = 0; i < 7; i++) {
     days.push(
-      <div className="col" key={i}>
+      <div
+        className={clsx('col', {
+          redDay: i === 0,
+          blueDay: i === 6,
+        })}
+        key={i}
+      >
         {date[i]}
       </div>,
     );

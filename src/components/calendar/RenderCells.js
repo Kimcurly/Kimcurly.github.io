@@ -3,6 +3,7 @@ import { useHeadSelectedDay, useSelectedDay } from '../../TodoContext';
 import styled from 'styled-components';
 import Modal from '../TodoList/Modal';
 import dayjs from 'dayjs';
+import clsx from 'clsx';
 
 const StyledSchedule = styled.div`
   width: 100%;
@@ -17,11 +18,15 @@ const StyledSchedule = styled.div`
   cursor: pointer;
 `;
 
+const LeftSchedules = styled.div`
+  width: 100%;
+  text-align: left;
+  color: #bfbfbf;
+`;
+
 function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
   const monthStart = currentMonth.startOf('month');
-  const monthEnd = monthStart.endOf('month');
   const startDate = monthStart.startOf('week');
-  const endDate = monthEnd.endOf('week');
 
   const { setHeadSelectedDay } = useHeadSelectedDay();
   const { setSelectedDay } = useSelectedDay();
@@ -29,8 +34,8 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
   const schedule = localStorage.getItem('newSchedules')
     ? JSON.parse(localStorage.getItem('newSchedules'))
     : [];
-  const storageSelectedDate = localStorage.getItem('selectedDate')
-    ? localStorage.getItem('selectedDate')
+  const storageSelectedDate = sessionStorage.getItem('selectedDate')
+    ? sessionStorage.getItem('selectedDate')
     : dayjs();
   const renderSchedules = schedule.sort().map((todo, index) => {
     const openModal = () => {
@@ -66,7 +71,7 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
 
   const updateSelectedDate = (day) => {
     setSelectedDate(day);
-    localStorage.setItem('selectedDate', day);
+    sessionStorage.setItem('selectedDate', day);
   };
 
   const onDateClick = (day) => {
@@ -90,32 +95,34 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
       days.push(
         <div className="col cell" key={day}>
           <div
-            className={`${
-              !day.isSame(monthStart, 'month')
-                ? 'disabled'
-                : !day.isSame(selectedDate, 'day')
-                ? 'valid'
-                : currentMonth.format('MM') !== day.format('MM')
-                ? 'not valid'
-                : 'selected'
-            }`}
+            className={clsx({
+              disabled: !day.isSame(monthStart, 'month'),
+              valid: !day.isSame(selectedDate, 'day'),
+              'not valid': currentMonth.format('MM') !== day.format('MM'),
+              selected: day.isSame(selectedDate, 'day'),
+            })}
             onClick={() => onDateClick(cloneDay)}
           >
             {/* 날짜에 줄바꿈 넣고 맵 메소드로 개행을 넣은 텍스트를 배열로 렌더링한다. */}
             <div
-              className={`${
-                !day.isSame(monthStart, 'month')
-                  ? 'disabledDay'
-                  : !day.isSame(selectedDate, 'day')
-                  ? 'valid'
-                  : currentMonth.format('MM') !== day.format('MM')
-                  ? 'not valid'
-                  : 'selectedDay'
-              }`}
+              className={clsx({
+                disabledDay: !day.isSame(monthStart, 'month'),
+                validedDay: !day.isSame(selectedDate, 'day'),
+                'not valid': currentMonth.format('MM') !== day.format('MM'),
+                selectedDay: day.isSame(selectedDate, 'day'),
+                redDay: day.format('dddd') === 'Sunday',
+                blueDay: day.format('dddd') === 'Saturday',
+              })}
+              id={day.isSame(dayjs(), 'day') ? 'today' : null}
             >
               {formattedDate}
             </div>
-            {renderSchedules.filter(filterSchedules)}
+            {renderSchedules.filter(filterSchedules).slice(0, 2)}
+            <LeftSchedules>
+              {renderSchedules.filter(filterSchedules).length >= 3
+                ? `+${renderSchedules.filter(filterSchedules).length - 2}`
+                : ''}
+            </LeftSchedules>
           </div>
         </div>,
       );

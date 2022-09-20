@@ -41,13 +41,14 @@ const ModalDateContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: ${(props) => props.redOrBlueDay};
 `;
 
 const ModalListContainer = styled.div`
   margin-top: 5%;
   padding-left: 5%;
   padding-right: 5%;
-  height: 55vh;
+  height: 52vh;
   overflow-y: auto;
 `;
 
@@ -90,7 +91,11 @@ const Modal = ({ setModalOpen, setSelectedDate, selectedDate }) => {
         <ModalHead>
           <span>일정 보기</span>
         </ModalHead>
-        <ModalDateContainer>
+        <ModalDateContainer
+          redOrBlueDay={
+            week === '일' ? '#FA425A' : week === '토' ? '#5972F0' : 'black'
+          }
+        >
           <h2>
             {year}. {month}. {day} {week}
           </h2>

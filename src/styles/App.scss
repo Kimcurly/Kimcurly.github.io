@@ -54,11 +54,16 @@
             margin-bottom: 5px;
             font-weight: 500;
             font-size: 1em;
-            padding: 2px;
             color: theme.$dark-gray-color;
             .col {
-                @include common.size(12.9%, 100%);
+                @include common.size(13.5%, 100%);
                 @include common.flex-row(center, center);
+            }
+            .redDay {
+                color: #FF4747;
+            }
+            .blueDay {
+                color: #4FB6FF;
             }
         }
         
@@ -74,16 +79,22 @@
             @include common.flex-row(space-between, center);
             margin: 0;
             .col.cell{
-                @include common.size(13.5%, 10vh);
+                @include common.size(13.5%, 13vh);
                 display: flex;
                 flex-direction: column-reverse;
                 justify-content: start;
                 align-items: center;
                 font-size: 1em;
-                overflow-y: auto;
-                
+                overflow-y: hidden;
+                text-overflow: ellipsis;
+                #today {
+                    background: #A5E8FE;
+                    border-radius: 1rem;
+                    color: #fff;
+                    font-weight: 600;
+                }
                 .disabled {
-                    opacity: 50%;
+                    opacity: 30%;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
@@ -99,6 +110,10 @@
                     width: 100%;
                     &:hover {
                         cursor: pointer;
+                    } .validedDay {
+                        width: 1.8vw;
+                        height: 3.5vh;
+                        text-align: center;
                     }
                 }
                 .selected {
@@ -108,13 +123,19 @@
                     width: 100%;
                     .selectedDay {
                         text-align: center;
-                        width: 25px;
-                        height: 25px;
+                        width: 1.8vw;
+                        height: 3.5vh;
                         border-radius: 1rem;
-                        background: #A5E8FE;
+                        background: #C8F1FF;
                         color: #fff;
                         font-weight: 600;
                     }
+                }
+                .redDay {
+                    color: #FA425A;
+                }
+                .blueDay {
+                    color: #5972F0;
                 }
                 
             }

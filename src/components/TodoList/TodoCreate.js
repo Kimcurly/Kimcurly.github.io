@@ -9,6 +9,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
+import swal from 'sweetalert';
 
 const InsertFormPositioner = styled.div`
   width: 100%;
@@ -51,11 +52,20 @@ const TodoCreate = () => {
   const nextId = useTodoNextId();
 
   const onAddSchedules = () => {
-    dispatch(addSchedule(selectedDay, value, nextId.current));
-    setValue('');
-    nextId.current += 1;
+    if (value !== '') {
+      dispatch(addSchedule(selectedDay, value, nextId.current));
+      setValue('');
+      nextId.current += 1;
 
-    navigate('/');
+      navigate('/Kimcurly.github.io/index.html');
+    } else {
+      swal({
+        title: '잠시만요!',
+        text: '일정을 입력한 뒤 추가 버튼을 눌러주세요!',
+        icon: 'warning',
+        button: '확인',
+      });
+    }
   };
 
   return (

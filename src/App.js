@@ -20,7 +20,10 @@ function App() {
         <GlobalStyle />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Calendar />}></Route>
+            <Route
+              path="/Kimcurly.github.io/index.html"
+              element={<Calendar />}
+            ></Route>
             <Route path="/addschedules" element={<TodoTemplate />}></Route>
           </Routes>
         </BrowserRouter>
