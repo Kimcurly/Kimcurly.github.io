@@ -85,8 +85,6 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
   let day = startDate;
   let formattedDate = '';
 
-  console.log(renderSchedules);
-
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
       formattedDate = day.format('D');

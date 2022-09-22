@@ -13,7 +13,7 @@ const UpdateComple = styled.button`
   font-size: 25px;
   cursor: pointer;
   margin-left: 4%;
-  background-color: #fadefe;
+  background-color: #f9f9f9;
   border: none;
   &:hover {
     color: #38d9a9;
@@ -101,7 +101,7 @@ const UpdateInput = styled.input`
   font-size: 1rem;
   padding: 5px;
   box-sizing: border-box;
-  background-color: #fadefe;
+  background-color: #f9f9f9;
   &:focus {
     outline: none;
   }
