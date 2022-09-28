@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 
-const useCurrentLocation = async () => {
+const useCurrentLocation = (options = {}) => {
   const [location, setLocation] = useState({});
 
-  const handleSuccess = async (pos) => {
+  const handleSuccess = (pos) => {
     if (pos != null) {
       const latitude = pos.coords.latitude;
       const longitude = pos.coords.longitude;
@@ -31,8 +31,12 @@ const useCurrentLocation = async () => {
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
-  }, []);
+    navigator.geolocation.getCurrentPosition(
+      handleSuccess,
+      handleError,
+      options,
+    );
+  }, [options]);
 
   return location;
 };

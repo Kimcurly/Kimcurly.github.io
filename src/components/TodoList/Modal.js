@@ -4,6 +4,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useHeadSelectedDay, useSelectedDay } from '../../TodoContext';
 import 'dayjs/locale/ko';
 import TodoItem from './TodoItem';
+import Weather from '../calendar/Weather';
 
 const ModalBg = styled.div`
   background: rgba(0, 0, 0, 0.5);
@@ -100,6 +101,7 @@ const Modal = ({ setModalOpen, setSelectedDate, selectedDate }) => {
             {year}. {month}. {day} {week}
           </h2>
         </ModalDateContainer>
+        <Weather year={year} month={month} day={day} />
         <ModalListContainer>
           {schedule
             .filter((todo) => todo.date.selectedDay === selectedDay.selectedDay)

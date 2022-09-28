@@ -35,7 +35,7 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
     ? JSON.parse(localStorage.getItem('newSchedules'))
     : [];
   const storageSelectedDate = sessionStorage.getItem('selectedDate')
-    ? sessionStorage.getItem('selectedDate')
+    ? JSON.parse(sessionStorage.getItem('selectedDate'))
     : dayjs();
   const renderSchedules = schedule.sort().map((todo, index) => {
     const openModal = () => {
@@ -56,8 +56,10 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
   let datekey = '';
 
   useEffect(() => {
-    mountedSelectedDate();
-  }, []);
+    if (storageSelectedDate !== selectedDate) {
+      mountedSelectedDate();
+    }
+  });
 
   const filterSchedules = (renderSchedules) => {
     if (renderSchedules.props.date === datekey) {
@@ -71,7 +73,7 @@ function RenderCells({ currentMonth, selectedDate, setSelectedDate }) {
 
   const updateSelectedDate = (day) => {
     setSelectedDate(day);
-    sessionStorage.setItem('selectedDate', day);
+    sessionStorage.setItem('selectedDate', JSON.stringify(day));
   };
 
   const onDateClick = (day) => {

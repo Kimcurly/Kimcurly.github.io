@@ -1,0 +1,176 @@
+.calendar {
+  width: 100vw;
+  height: 90vh;
+  position: relative;
+  background: white;
+  padding-top: 10px;
+}
+.calendar .header {
+  width: 100%;
+  height: 7%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+.calendar .header .col.col-start {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-left: 1%;
+}
+.calendar .header .col.col-start .text {
+  font-size: 0.8em;
+}
+.calendar .header .col.col-start .text.month {
+  font-size: 1.6em;
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+.calendar .header .col.col-end {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+.calendar .header .col.col-end svg {
+  width: 10%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  margin-left: 30px;
+  margin-right: 15px;
+  color: rgba(128, 128, 128, 0.8);
+}
+.calendar .header .col.col-end svg:hover {
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  transform: scale(1.15);
+  color: #686868;
+}
+.calendar .header .col.col-end .space {
+  padding-left: 30px;
+  padding-right: 50px;
+}
+
+.days {
+  width: 100%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 1em;
+  color: #686868;
+}
+.days .col {
+  width: 13.5%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.days .redDay {
+  color: #FF4747;
+}
+.days .blueDay {
+  color: #4FB6FF;
+}
+
+hr {
+  margin: 0;
+}
+
+.body {
+  width: 100%;
+  height: 89%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.body .row {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+.body .row .col.cell {
+  width: 13.5%;
+  height: 13vh;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: start;
+  align-items: center;
+  font-size: 1em;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+}
+.body .row .col.cell #today {
+  background: #A5E8FE;
+  border-radius: 1rem;
+  color: #fff;
+  font-weight: 600;
+}
+.body .row .col.cell .disabled {
+  opacity: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.body .row .col.cell .disabled .disabledDay {
+  text-align: center;
+}
+.body .row .col.cell .valid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.body .row .col.cell .valid:hover {
+  cursor: pointer;
+}
+.body .row .col.cell .valid .validedDay {
+  width: 25px;
+  height: 25px;
+  text-align: center;
+}
+.body .row .col.cell .selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.body .row .col.cell .selected .selectedDay {
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 1rem;
+  background: #C8F1FF;
+  color: #fff;
+  font-weight: 600;
+}
+.body .row .col.cell .redDay {
+  color: #FA425A;
+}
+.body .row .col.cell .blueDay {
+  color: #5972F0;
+}/*# sourceMappingURL=App.css.map */

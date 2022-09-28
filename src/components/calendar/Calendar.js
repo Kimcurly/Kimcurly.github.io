@@ -8,7 +8,6 @@ import { Fab } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { useTodoDispatch, useTodoNextId } from '../../TodoContext';
-import Weather from './Weather';
 
 const StyledFab = styled(Fab)`
   z-index: 10;
@@ -76,7 +75,6 @@ const Calendar = () => {
       <StyledFab aria-label="edit" onClick={() => navigate('/addschedules')}>
         <StyledEdit />
       </StyledFab>
-      <Weather />
     </>
   );
 };
