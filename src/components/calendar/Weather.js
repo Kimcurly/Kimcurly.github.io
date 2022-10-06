@@ -3,11 +3,91 @@ import axios from 'axios';
 import useCurrentLocation from '../../hooks/useCurrentLocation';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
+import {
+  faSun,
+  faMoon,
+  faCloudMoon,
+  faCloudSun,
+  faCloud,
+  faCloudMeatball,
+  faCloudRain,
+  faCloudSunRain,
+  faCloudMoonRain,
+  faCloudBolt,
+  faSnowflake,
+  faSmog,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+const weatherIcon = [
+  {
+    code: '01d',
+    icon: faSun,
+  },
+  {
+    code: '01n',
+    icon: faMoon,
+  },
+  {
+    code: '02d',
+    icon: faCloudSun,
+  },
+  {
+    code: '02n',
+    icon: faCloudMoon,
+  },
+  {
+    code: '03',
+    icon: faCloud,
+  },
+  {
+    code: '04',
+    icon: faCloudMeatball,
+  },
+  {
+    code: '09',
+    icon: faCloudRain,
+  },
+  {
+    code: '10d',
+    icon: faCloudSunRain,
+  },
+  {
+    code: '10n',
+    icon: faCloudMoonRain,
+  },
+  {
+    code: '11',
+    icon: faCloudBolt,
+  },
+  {
+    code: '13',
+    icon: faSnowflake,
+  },
+  {
+    code: '50',
+    icon: faSmog,
+  },
+];
+
+console.log(weatherIcon);
+
+const RootContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`;
 
 const WeatherContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
+
+  width: 50%;
+`;
+
+const TempContainer = styled.div`
+  height: 33%;
 `;
 
 const geolocationOptions = {
@@ -41,6 +121,8 @@ const Weather = ({ year, month, day }) => {
   console.log(url);
 
   useEffect(() => {
+    let isComponentMounted = true;
+
     const fetchWeather = async () => {
       if (!lat || !lon) return;
       try {
@@ -54,22 +136,31 @@ const Weather = ({ year, month, day }) => {
             setPrevDay(false);
           }
         }
-        setWeather(response.data);
+        if (isComponentMounted) {
+          setWeather(response.data);
+        }
       } catch (e) {
+        console.log(e);
         setError(e);
       }
+
       setLoading(false);
     };
 
     fetchWeather();
+
+    return () => {
+      isComponentMounted = false;
+    };
   }, [lat, lon, url]);
-  console.log(prevDay);
+
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>에러가 발생했습니다.</div>;
   if (!weather) return null;
   if (!prevDay) return null;
 
   const fiveDaysWeather = weather.list;
+  const weatherDate = dayjs(selectedDate);
 
   const filterDay = (list) => {
     if (Number(list.dt_txt.substr(11, 2)) % 3 === 0) return true;
@@ -86,7 +177,7 @@ const Weather = ({ year, month, day }) => {
   };
   console.log(fiveDaysWeather);
 
-  const handleSelectedDayTemp = () => {
+  const handleSelectedDay = () => {
     const firstFilterdDay = fiveDaysWeather
       .filter(
         (list) =>
@@ -96,7 +187,6 @@ const Weather = ({ year, month, day }) => {
       .filter(filterDay);
     console.log(firstFilterdDay);
 
-    // 기존의 secondFilterDay 를 현재 thirdFilterDay 로 바꾸는 리팩토링 작업 필요.
     const secondFilterdDay =
       secondFilterDay() === currentHour
         ? firstFilterdDay.filter(
@@ -114,13 +204,30 @@ const Weather = ({ year, month, day }) => {
             (list) => Number(list.dt_txt.substr(11, 2)) === currentHour,
           );
     console.log(secondFilterdDay);
-    return secondFilterdDay.map((data) => {
-      return data.main.temp;
-    });
+
+    return secondFilterdDay;
   };
 
-  const weatherDate = dayjs(selectedDate);
-  const selectedDayTemp = Math.round(...handleSelectedDayTemp());
+  const iconCode = handleSelectedDay()[0].weather[0].icon;
+  console.log(iconCode);
+
+  let trimedIconCode =
+    iconCode.substr(0, 2) === '01' ||
+    iconCode.substr(0, 2) === '02' ||
+    iconCode.substr(0, 2) === '10'
+      ? iconCode
+      : iconCode.substr(0, 2);
+  console.log(trimedIconCode);
+
+  const filteredIcon = weatherIcon.filter((element) => {
+    return element.code === trimedIconCode;
+  });
+  console.log(filteredIcon[0].icon);
+
+  const selectedDayTemp = Math.round(handleSelectedDay()[0].main.temp);
+  const selectedDayDescription = handleSelectedDay()[0].weather[0].description;
+  console.log(selectedDayDescription);
+
   const selectedDayTempMaxArr = fiveDaysWeather
     .filter(
       (list) =>
@@ -147,13 +254,19 @@ const Weather = ({ year, month, day }) => {
   console.log(selectedDayTempMaxArr, selectedDayTempMinArr);
 
   return (
-    <>
+    <RootContainer>
       <WeatherContainer>
-        {`${selectedDayTemp}°`}
-        {`${selectedDayTempMax}°`}
-        {`${selectedDayTempMin}°`}
+        <TempContainer>
+          <FontAwesomeIcon icon={filteredIcon[0].icon} />
+          &nbsp;
+          {`${selectedDayTemp}°`}
+        </TempContainer>
+        <div>{selectedDayDescription}</div>
+        {`최고: ${selectedDayTempMax}°`}
+        &nbsp;
+        {`최저: ${selectedDayTempMin}°`}
       </WeatherContainer>
-    </>
+    </RootContainer>
   );
 };
 
