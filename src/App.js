@@ -6,6 +6,7 @@ import { TodoProvider } from './TodoContext';
 import { StyledEngineProvider } from '@mui/styled-engine';
 import TodoTemplate from './components/TodoList/TodoTemplate';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import NotFound from '../src/NotFound';
 
 const GlobalStyle = createGlobalStyle`
 body {
@@ -25,6 +26,7 @@ function App() {
               element={<Calendar />}
             ></Route>
             <Route path="/addschedules" element={<TodoTemplate />}></Route>
+            <Route path="/*" element={<NotFound />}></Route>
           </Routes>
         </BrowserRouter>
       </TodoProvider>
