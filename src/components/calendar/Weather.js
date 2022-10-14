@@ -230,46 +230,43 @@ const Weather = ({ year, month, day }) => {
   const lat = location.latitude;
   const lon = location.longitude;
   console.log(lat, lon);
-  const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+  const fourDaysUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+  const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
 
   const currentHour = dayjs().get('h');
   const selectedCellDay = dayjs(`${year}-${month}-${day}`);
 
-  console.log(apiUrl);
+  console.log(fourDaysUrl);
 
   useEffect(() => {
-    let isComponentMounted = true;
-
-    const fetchWeather = async () => {
-      if (!lat || !lon) return;
-      try {
-        setError(null);
-        setWeather(null);
-        setLoading(true);
-        setPrevDay(true);
-        const response = await axios.get(apiUrl);
-        if (selectedCellDay.isBefore(dayjs())) {
-          if (!selectedCellDay.isSame(dayjs(), 'day')) {
-            setPrevDay(false);
-          }
-        }
-        if (isComponentMounted) {
-          setWeather(response.data);
-        }
-      } catch (e) {
+    if (!lat || !lon) return;
+    setError(null);
+    setLoading(true);
+    setPrevDay(true);
+    axios
+      .all([axios.get(currentUrl), axios.get(fourDaysUrl)])
+      .then(
+        axios.spread((res1, res2) => {
+          const today = res1.data;
+          const fourDays = res2.data;
+          const res = [today, fourDays];
+          setLoading(false);
+          console.log(res);
+          setWeather(res);
+        }),
+      )
+      .catch((e) => {
         console.log(e);
         setError(e);
+      });
+    if (selectedCellDay.isBefore(dayjs())) {
+      if (!selectedCellDay.isSame(dayjs(), 'day')) {
+        setPrevDay(false);
       }
+    }
 
-      setLoading(false);
-    };
-
-    fetchWeather();
-
-    return () => {
-      isComponentMounted = false;
-    };
-  }, [lat, lon, apiUrl]);
+    return;
+  }, [lat, lon, fourDaysUrl, currentUrl]);
 
   if (loading) return <ErrorLoadingContainer>로딩 중...</ErrorLoadingContainer>;
   if (error)
@@ -290,11 +287,13 @@ const Weather = ({ year, month, day }) => {
   if (!weather) return null;
   if (!prevDay) return null;
 
-  const ExcludeTodayWeather = weather.list.filter(
+  const todayWeather = weather[0];
+  const excludeTodayWeather = weather[1].list.filter(
     (element) => !dayjs(element.dt_txt.substr(0, 10)).isSame(dayjs(), 'day'),
   );
-  console.log(ExcludeTodayWeather);
-  console.log(!dayjs('2022-10-14').isSame(dayjs(), 'day'));
+
+  console.log(todayWeather);
+  console.log(excludeTodayWeather);
   const weatherDate = dayjs(selectedDate);
 
   const filterDay = (list) => {
@@ -312,11 +311,16 @@ const Weather = ({ year, month, day }) => {
   };
 
   const handleSelectedDay = () => {
-    const firstFilterdDay = ExcludeTodayWeather.filter(
-      (list) =>
-        list.dt_txt.substr(0, 10) ===
-        weatherDate.add(1, 'day').format('YYYY-MM-DD'),
-    ).filter(filterDay);
+    if (selectedCellDay.isSame(dayjs(), 'day')) {
+      return todayWeather;
+    }
+    const firstFilterdDay = excludeTodayWeather
+      .filter(
+        (list) =>
+          list.dt_txt.substr(0, 10) ===
+          weatherDate.add(1, 'day').format('YYYY-MM-DD'),
+      )
+      .filter(filterDay);
     console.log(firstFilterdDay);
 
     const secondFilterdDay =
@@ -340,7 +344,11 @@ const Weather = ({ year, month, day }) => {
     return secondFilterdDay;
   };
 
-  const iconCode = handleSelectedDay()[0].weather[0].icon;
+  console.log(handleSelectedDay());
+  const iconCode = selectedCellDay.isSame(dayjs(), 'day')
+    ? handleSelectedDay().weather[0].icon
+    : handleSelectedDay()[0].weather[0].icon;
+
   console.log(iconCode);
 
   let trimedIconCode =
@@ -352,13 +360,18 @@ const Weather = ({ year, month, day }) => {
       : iconCode.substr(0, 2);
   console.log(trimedIconCode);
 
-  const filteredIcon = weatherIcon.filter((element) => {
-    return element.code === trimedIconCode;
-  });
+  const filteredIcon = weatherIcon.filter(
+    (element) => element.code === trimedIconCode,
+  );
   console.log(filteredIcon[0].icon);
 
-  const selectedDayTemp = Math.round(handleSelectedDay()[0].main.temp);
-  const selectedDayDescriptionId = handleSelectedDay()[0].weather[0].id;
+  const selectedDayTemp = selectedCellDay.isSame(dayjs(), 'day')
+    ? Math.round(handleSelectedDay().main.temp)
+    : Math.round(handleSelectedDay()[0].main.temp);
+
+  const selectedDayDescriptionId = selectedCellDay.isSame(dayjs(), 'day')
+    ? handleSelectedDay().weather[0].id
+    : handleSelectedDay()[0].weather[0].id;
   console.log(selectedDayDescriptionId);
 
   const idAssignDescription = () => {
@@ -404,24 +417,36 @@ const Weather = ({ year, month, day }) => {
   const selectedDayDescription = idAssignDescription();
   console.log(selectedDayDescription);
 
-  const selectedDayTempMaxArr = ExcludeTodayWeather.filter(
-    (list) =>
-      list.dt_txt.substr(0, 10) ===
-      weatherDate.add(1, 'day').format('YYYY-MM-DD'),
-  ).map((data) => {
-    return data.main.temp_max;
-  });
-  const selectedDayTempMinArr = ExcludeTodayWeather.filter(
-    (list) =>
-      list.dt_txt.substr(0, 10) ===
-      weatherDate.add(1, 'day').format('YYYY-MM-DD'),
-  ).map((data) => {
-    return data.main.temp_min;
-  });
+  const selectedDayTempMaxArr = selectedCellDay.isSame(dayjs(), 'day')
+    ? todayWeather.main.temp_max
+    : excludeTodayWeather
+        .filter(
+          (list) =>
+            list.dt_txt.substr(0, 10) ===
+            weatherDate.add(1, 'day').format('YYYY-MM-DD'),
+        )
+        .map((data) => {
+          return data.main.temp_max;
+        });
+  const selectedDayTempMinArr = selectedCellDay.isSame(dayjs(), 'day')
+    ? todayWeather.main.temp_min
+    : excludeTodayWeather
+        .filter(
+          (list) =>
+            list.dt_txt.substr(0, 10) ===
+            weatherDate.add(1, 'day').format('YYYY-MM-DD'),
+        )
+        .map((data) => {
+          return data.main.temp_min;
+        });
   console.log(selectedDayTemp);
 
-  const selectedDayTempMax = Math.round(Math.max(...selectedDayTempMaxArr));
-  const selectedDayTempMin = Math.round(Math.min(...selectedDayTempMinArr));
+  const selectedDayTempMax = selectedCellDay.isSame(dayjs(), 'day')
+    ? Math.round(selectedDayTempMaxArr)
+    : Math.round(Math.max(...selectedDayTempMaxArr));
+  const selectedDayTempMin = selectedCellDay.isSame(dayjs(), 'day')
+    ? Math.round(selectedDayTempMinArr)
+    : Math.round(Math.min(...selectedDayTempMinArr));
 
   console.log(selectedDayTempMaxArr, selectedDayTempMinArr);
 
